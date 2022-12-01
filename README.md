@@ -111,4 +111,7 @@ upstream backend {
 ## Vérification:
 
 Depuis un navigateur sur votre poste de travail, naviguer sur 10.1.0.101:8080 et raffraichissez la page. Vous aurez aléatoirement un des 3 sites qui répondra.
+
 Si ok, le load-balancing est fonctionnel.
+
+En cas de la configuration avec le cycle de vie adapté, vous pouvez tester d'arrêter une VM ou le service nginx, les autres serveurs garantiront le service.
