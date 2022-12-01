@@ -1,49 +1,78 @@
-# lab-virtualbox
-
-TP déploiement manuel
+# Lab-virtualbox
 
 https://upcloud.com/resources/tutorials/configure-load-balancing-nginx
 
-3 vms
-Debian11 Nginx loadbalancer, client 1 & 2
-Conf ip
+## Architecture:
 
-* Nginx load balancer
+  * 3 vms
+  * Debian11 Nginx loadbalancer, client 1 & 2
+  * schéma de présentation
 
-Apt update / upgrade
-Apt install nginx
-Cd /etc/nginx
+## Déploiement du load-balancer (VM1)
+
+```
+apt update / upgrade
+apt install nginx
+cd /etc/nginx
+```
+Doit comporter:
+```
 - Site available
 - Site enable (défault)
+```
 
-Apt install curl
-Curl localhost: success
+Installation de l'outil curl pour tester une page web en local;
+```
+apt install curl
+curl localhost: success
+```
+On modifie la page d'accueil:
 
-Cd /var/www/html/
+```
+cd /var/www/html/
 Mv *.html html.old
-Touch index.html
+nano index.html
+```
 
-	<html>
+```
+<html>
   <body>
     <p>hello from site 1</p>
   </body>
 </html>
+```
 
+Puis on redémarre le service:
+
+```
 Systemctl restart nginx
-Connaitre le DNS: nmcli
+```
 
-Test local: OK
+Tips: modification / information des paramètres locaux de la VM
 
-* Clone VM Nginx client 1 et 2
+```
+nmcli
+```
 
-- Changer l’ip, le dns (change Mac adresse)
-- Vérifier la connexion via ping
-- Modifier les index site2/3
+Test local: si OK, on poursuit
 
-* Nginx load balancer
+## Déploiement VM2 et VM3
 
-Touch /etc/nginx/conf.f/load-balancer.conf
+- Clone VM Nginx client 1 et 2 via virtualbox
 
+  * Changer l’ip, le dns (change Mac adresse)
+  * Vérifier la connexion via ping
+  * Modifier les index site2/3
+
+- Activation coté nginx load balancer (VM1)
+
+```
+touch /etc/nginx/conf.f/load-balancer.conf
+```
+
+Puis le peupler:
+
+```
 # Define which servers to include in the load balancing scheme. 
 # It's best to use the servers' private IPs for better performance and security.
 # You can find the private IPs at your UpCloud control panel Network section.
@@ -65,13 +94,21 @@ http {
       }
    }
 }
+```
 
+TIPS: **peut être supprimer le http du début si erreur lors du redémarrage de nginx**
 
--> peut être supprimer le http du début si erreur lors du redémarrage de nginx
+TIPS2: possibilité de paramétrer un cycle de vie:
 
-PLUS cycle de vie:
- upstream backend {
+```
+upstream backend {
    server 10.1.0.101 weight=5;
    server 10.1.0.102 max_fails=3 fail_timeout=30s;
    server 10.1.0.103;
 }
+```
+
+## Vérification:
+
+Depuis un navigateur sur votre poste de travail, naviguer sur 10.1.0.101:8080 et raffraichissez la page. Vous aurez aléatoirement un des 3 sites qui répondra.
+Si ok, le load-balancing est fonctionnel.
