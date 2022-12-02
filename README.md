@@ -5,13 +5,15 @@
 - [Déploiement VM2 et VM3](#déploiement-vm2-et-vm3)
 - [Vérification](#vérification)
 
-## Architecture:
+## 1ere Partie
+
+### Architecture:
 
   * 3 vms
   * Debian11 Nginx loadbalancer, client 1 & 2
   * schéma de présentation
 
-## Déploiement du load-balancer (VM1)
+### Déploiement du load-balancer (VM1)
 
 ```
 apt update / upgrade
@@ -59,7 +61,9 @@ nmcli
 
 Test local: si OK, on poursuit
 
-## Déploiement VM2 et VM3
+## Deuxième Partie
+
+### Déploiement VM2 et VM3
 
 - Clone VM Nginx client 1 et 2 via virtualbox
 
@@ -111,7 +115,7 @@ upstream backend {
 }
 ```
 
-## Vérification
+### Vérification
 
 Depuis un navigateur sur votre poste de travail, naviguer sur 10.1.0.101:8080 et raffraichissez la page. Vous aurez aléatoirement un des 3 sites qui répondra.
 
