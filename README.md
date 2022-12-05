@@ -74,7 +74,7 @@ Test local: si OK, on poursuit
 - Activation coté nginx load balancer (VM1)
 
 ```
-touch /etc/nginx/conf.f/load-balancer.conf
+touch /etc/nginx/conf.d/load-balancer.conf
 ```
 
 Puis le peupler:
