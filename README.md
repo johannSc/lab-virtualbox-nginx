@@ -113,8 +113,9 @@ server {
         location / {
                 try_files $uri $uri/ =404;
         }
+        }
+```
 
-}```
 
 TIPS: **peut être supprimer le http du début si erreur lors du redémarrage de nginx**
 
