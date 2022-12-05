@@ -73,35 +73,48 @@ Test local: si OK, on poursuit
 
 - Activation coté nginx load balancer (VM1)
 
+On supprime la conf unique
 ```
-touch /etc/nginx/conf.d/load-balancer.conf
+rm /etc/nginx/site-enable/default.conf
 ```
-
-Puis le peupler:
+Puis on créé une conf avec le site local + la fonction de load-balancing:
 
 ```
 # Define which servers to include in the load balancing scheme. 
 # It's best to use the servers' private IPs for better performance and security.
 # You can find the private IPs at your UpCloud control panel Network section.
-http {
    upstream backend {
-      server 10.1.0.101; 
-      server 10.1.0.102;
-      server 10.1.0.103;
+      server 192.168.1.192;
+      server 192.168.1.193;
+      server 192.168.1.194;
    }
 
    # This server accepts all traffic to port 80 and passes it to the upstream. 
    # Notice that the upstream name and the proxy_pass need to match.
 
    server {
-      listen 8080; 
+      listen 8080;
 
       location / {
           proxy_pass http://backend;
       }
    }
-}
-```
+
+server {
+        listen 80 default_server;
+        listen [::]:80 default_server;
+
+        root /var/www/html;
+
+        index index.html index.htm index.nginx-debian.html;
+
+        server_name _;
+
+        location / {
+                try_files $uri $uri/ =404;
+        }
+
+}```
 
 TIPS: **peut être supprimer le http du début si erreur lors du redémarrage de nginx**
 
